@@ -18,26 +18,18 @@ const CharacterDetail = () => {
         setLoading(true);
         setError(null);
         
-        // 1. Traemos los datos básicos del personaje
-        const response = await getCharacterById(id);
+        const response = await axios.get(`https://rickandmortyapi.com/api/character/${id}`);
         const charData = response.data;
         setCharacter(charData);
 
-        // 2. Si el personaje tiene episodios, buscamos sus nombres reales
+        // (Luego se resuelven las promesas de los episodios en paralelo como ya hacías)
         if (charData.episode && charData.episode.length > 0) {
-          // Creamos un array de promesas de Axios con cada URL del episodio
           const episodePromises = charData.episode.map((url) => axios.get(url));
-          
-          // Resolvemos todas las peticiones al mismo tiempo de forma ultra veloz
           const episodeResponses = await Promise.all(episodePromises);
-          
-          // Extraemos solo los datos de los episodios (.data) y los guardamos
-          const episodesData = episodeResponses.map((res) => res.data);
-          setEpisodes(episodesData);
+          setEpisodes(episodeResponses.map((res) => res.data));
         }
       } catch (err) {
-        console.error("Error al cargar el detalle:", err);
-        setError('Error al cargar los detalles del personaje.');
+        setError('Error al cargar los detalles.');
       } finally {
         setLoading(false);
       }

@@ -8,13 +8,16 @@ const LocationGallery = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getLocations(1)
-      .then(res => {
-        setLocations(res.data.results);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+  setLoading(true);
+  
+  // 👈 ACÁ: Consumo directo del endpoint de locaciones desde el JSX
+  axios.get('https://rickandmortyapi.com/api/location?page=1')
+    .then(res => {
+      setLocations(res.data.results);
+      setLoading(false);
+    })
+    .catch(() => setLoading(false));
+}, []);
 
   if (loading) return <Loading />;
 

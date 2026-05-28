@@ -19,17 +19,10 @@ const EpisodeSearch = () => {
     setEpisodes([]); // Limpiamos resultados anteriores antes de buscar
 
     try {
-      // Pasamos el texto limpio a la API
-      const response = await getEpisodesByName(searchTerm.trim());
-      
-      if (response.data && response.data.results) {
-        setEpisodes(response.data.results);
-      } else {
-        setError('No se encontraron episodios con ese nombre.');
-      }
+      const response = await axios.get(`https://rickandmortyapi.com/api/episode/?name=${searchTerm.trim()}`);
+      setEpisodes(response.data.results);
     } catch (err) {
-      console.error("Error al buscar episodios:", err);
-      setError('No se encontraron episodios. Intenta con otra palabra (ej: Pilot, Rick, Pickle).');
+      setError('No se encontraron episodios.');
     } finally {
       setLoading(false);
     }

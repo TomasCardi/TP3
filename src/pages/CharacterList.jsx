@@ -17,10 +17,10 @@ const CharacterList = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await getCharacters(page, status);
+        const response = await axios.get(`https://rickandmortyapi.com/api/character?page=${page}&status=${status}`);
         setCharacters(response.data.results);
       } catch (err) {
-        setError('No se encontraron personajes o hubo un error en el servidor.');
+        setError('No se encontraron personajes.');
       } finally {
         setLoading(false);
       }
