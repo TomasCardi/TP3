@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getEpisodesByName } from '../services/api';
+import axios from 'axios'; // 💡 Axios directo para la búsqueda por texto
 
 const EpisodeSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,18 +11,24 @@ const EpisodeSearch = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     
-    // Si el usuario no escribió nada, no hace nada
     if (!searchTerm.trim()) return;
 
     setLoading(true);
     setError(null);
-    setEpisodes([]); // Limpiamos resultados anteriores antes de buscar
+    setEpisodes([]); 
 
     try {
+      // 👈 Pegamos directo a la URL de la API usando el término de búsqueda sanitizado con .trim()
       const response = await axios.get(`https://rickandmortyapi.com/api/episode/?name=${searchTerm.trim()}`);
-      setEpisodes(response.data.results);
+      
+      if (response.data && response.data.results) {
+        setEpisodes(response.data.results);
+      } else {
+        setError('No se encontraron episodios con ese nombre.');
+      }
     } catch (err) {
-      setError('No se encontraron episodios.');
+      console.error("Error al buscar episodios:", err);
+      setError('No se encontraron episodios. Intenta con otra palabra (ej: Pilot, Rick, Pickle).');
     } finally {
       setLoading(false);
     }

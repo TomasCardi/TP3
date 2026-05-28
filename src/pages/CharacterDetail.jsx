@@ -1,14 +1,13 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios'; // 💡 Importamos axios para resolver las URLs de los episodios
-import { getCharacterById } from '../services/api';
+import axios from 'axios'; // 💡 Axios directo para todo
 import Loading from '../componentes/Loading';
 import ErrorMessage from '../componentes/ErrorMessage';
 
 const CharacterDetail = () => {
   const { id } = useParams();
   const [character, setCharacter] = useState(null);
-  const [episodes, setEpisodes] = useState([]); // 🔥 Estado nuevo para guardar los capítulos reales
+  const [episodes, setEpisodes] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -18,18 +17,26 @@ const CharacterDetail = () => {
         setLoading(true);
         setError(null);
         
+        // 1. Traemos los datos básicos del personaje pegándole directo al endpoint de internet
         const response = await axios.get(`https://rickandmortyapi.com/api/character/${id}`);
         const charData = response.data;
         setCharacter(charData);
 
-        // (Luego se resuelven las promesas de los episodios en paralelo como ya hacías)
+        // 2. Si el personaje tiene episodios, buscamos sus nombres reales
         if (charData.episode && charData.episode.length > 0) {
+          // Creamos el array de promesas directo con Axios
           const episodePromises = charData.episode.map((url) => axios.get(url));
+          
+          // Resolvemos todas las peticiones al mismo tiempo
           const episodeResponses = await Promise.all(episodePromises);
-          setEpisodes(episodeResponses.map((res) => res.data));
+          
+          // Extraemos los datos y los guardamos
+          const episodesData = episodeResponses.map((res) => res.data);
+          setEpisodes(episodesData);
         }
       } catch (err) {
-        setError('Error al cargar los detalles.');
+        console.error("Error al cargar el detalle:", err);
+        setError('Error al cargar los detalles del personaje.');
       } finally {
         setLoading(false);
       }
@@ -55,11 +62,9 @@ const CharacterDetail = () => {
       
       <h3>Episodios donde aparece 🎬</h3>
       <ul>
-        {/* 💡 Modificado: Ahora mapeamos el array 'episodes' que tiene la info real de la API */}
         {episodes.map((ep) => (
           <li key={ep.id}>
             <Link to={`/episode/${ep.id}`}>
-              {/* 🪐 Reemplazamos el texto fijo por el código y nombre real (Ej: S01E01 - Pilot) */}
               <span>🛸 {ep.episode} - {ep.name}</span>
               <span className="detail-link-text">Ver detalles del episodio</span>
             </Link>

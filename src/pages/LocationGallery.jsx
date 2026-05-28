@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getLocations } from '../services/api';
+import axios from 'axios'; //  AGREGÁ ESTA LÍNEA
 import Loading from '../componentes/Loading';
 
 const LocationGallery = () => {
@@ -8,16 +8,19 @@ const LocationGallery = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  setLoading(true);
-  
-  // 👈 ACÁ: Consumo directo del endpoint de locaciones desde el JSX
-  axios.get('https://rickandmortyapi.com/api/location?page=1')
-    .then(res => {
-      setLocations(res.data.results);
-      setLoading(false);
-    })
-    .catch(() => setLoading(false));
-}, []);
+    setLoading(true);
+    
+    // 👈 AQUÍ: Hacemos la consulta asíncrona directa a la URL desde el componente JSX
+    axios.get('https://rickandmortyapi.com/api/location?page=1')
+      .then(res => {
+        setLocations(res.data.results);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
 
   if (loading) return <Loading />;
 

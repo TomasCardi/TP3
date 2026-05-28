@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getCharacters } from '../services/api';
+import axios from 'axios'; //  AGREGÁ ESTA LÍNEA
 import CharacterCard from '../componentes/CharacterCard';
 import Loading from '../componentes/Loading';
 import ErrorMessage from '../componentes/ErrorMessage';
