@@ -8,7 +8,6 @@ const CharacterComparator = () => {
   const [char2, setChar2] = useState(null);
 
   useEffect(() => {
-    // Traemos los primeros 20 personajes para el selector básico
     axios.get('https://rickandmortyapi.com/api/character')
       .then(res => setAllCharacters(res.data.results))
       .catch(err => console.error(err));
@@ -43,7 +42,7 @@ const CharacterComparator = () => {
         <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
           {char1 ? (
             <>
-              <img src={char1.image} alt={char1.name} style={{ borderRadius: '0.5rem', width: '100%', height: '200px', objectFit: 'cover' }} />
+              <img src={char1.image} alt={char1.name} style={{ borderRadius: '0.5rem', width: '100%', height: '600px', objectFit: 'cover' }} />
               <h3>{char1.name}</h3>
               <p><strong>Estado:</strong> {char1.status === 'Alive' ? '🟢 Vivo' : '🔴 Muerto/Desconocido'}</p>
               <p><strong>Especie:</strong> {char1.species}</p>
@@ -60,7 +59,7 @@ const CharacterComparator = () => {
         <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
           {char2 ? (
             <>
-              <img src={char2.image} alt={char2.name} style={{ borderRadius: '0.5rem', width: '100%', height: '200px', objectFit: 'cover' }} />
+              <img src={char2.image} alt={char2.name} style={{ borderRadius: '0.5rem', width: '100%', height: '600px', objectFit: 'cover' }} />
               <h3>{char2.name}</h3>
               <p><strong>Estado:</strong> {char2.status === 'Alive' ? '🟢 Vivo' : '🔴 Muerto/Desconocido'}</p>
               <p><strong>Especie:</strong> {char2.species}</p>

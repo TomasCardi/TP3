@@ -18,7 +18,7 @@ const EpisodeSearch = () => {
     setEpisodes([]); 
 
     try {
-      // 👈 Pegamos directo a la URL de la API usando el término de búsqueda sanitizado con .trim()
+      // Pegamos directo a la URL de la API usando el término de búsqueda sanitizado con .trim()
       const response = await axios.get(`https://rickandmortyapi.com/api/episode/?name=${searchTerm.trim()}`);
       
       if (response.data && response.data.results) {

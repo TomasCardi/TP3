@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios'; // 💡 Axios directo para todo
+import axios from 'axios'; 
 import Loading from '../componentes/Loading';
 import ErrorMessage from '../componentes/ErrorMessage';
 
@@ -16,18 +16,15 @@ const CharacterDetail = () => {
       try {
         setLoading(true);
         setError(null);
-        
-        // 1. Traemos los datos básicos del personaje pegándole directo al endpoint de internet
+
         const response = await axios.get(`https://rickandmortyapi.com/api/character/${id}`);
         const charData = response.data;
         setCharacter(charData);
 
-        // 2. Si el personaje tiene episodios, buscamos sus nombres reales
+        // Si el personaje aparece en más episodios, se busca sus nombres reales y se pasan
         if (charData.episode && charData.episode.length > 0) {
           // Creamos el array de promesas directo con Axios
           const episodePromises = charData.episode.map((url) => axios.get(url));
-          
-          // Resolvemos todas las peticiones al mismo tiempo
           const episodeResponses = await Promise.all(episodePromises);
           
           // Extraemos los datos y los guardamos
